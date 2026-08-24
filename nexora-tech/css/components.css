@@ -1,0 +1,399 @@
+.drawer {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    width: min(430px, 94vw);
+    background: #101720;
+    z-index: 31;
+    padding: 25px;
+    transform: translateX(105%);
+    transition: .28s;
+    border-left: 1px solid var(--line);
+    display: flex;
+    flex-direction: column
+}
+
+.drawer.open {
+    transform: none
+}
+
+.drawer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: start
+}
+
+.drawer h2,
+.modal h2 {
+    margin: 0;
+    font-size: 25px;
+    letter-spacing: -1px
+}
+
+.close-btn {
+    font-size: 30px;
+    color: #a9b4c3
+}
+
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: #020407a8;
+    backdrop-filter: blur(3px);
+    z-index: 29;
+    opacity: 0;
+    pointer-events: none;
+    transition: .25s
+}
+
+.backdrop.show {
+    opacity: 1;
+    pointer-events: auto
+}
+
+.cart-items {
+    overflow: auto;
+    flex: 1;
+    margin: 22px -8px;
+    padding: 0 8px
+}
+
+.cart-item {
+    display: flex;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid #ffffff0c
+}
+
+.cart-item .product-art {
+    height: 80px;
+    width: 82px;
+    flex: none;
+    border-radius: 8px
+}
+
+.cart-item .product-art span {
+    font-size: 32px
+}
+
+.cart-item h3 {
+    font-size: 12px;
+    margin: 2px 0
+}
+
+.cart-item strong {
+    font-size: 13px
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 9px
+}
+
+.quantity button {
+    border: 1px solid var(--line);
+    color: white;
+    background: #18202b;
+    border-radius: 4px;
+    width: 22px;
+    height: 22px
+}
+
+.quantity .remove {
+    border: 0;
+    background: transparent;
+    color: #ee8193;
+    font-size: 18px;
+    margin-left: 10px
+}
+
+.cart-summary {
+    border-top: 1px solid var(--line);
+    padding-top: 16px
+}
+
+.cart-summary>div {
+    display: flex;
+    justify-content: space-between;
+    margin: 7px 0;
+    color: #aeb8c5;
+    font-size: 12px
+}
+
+.cart-summary .success {
+    color: #69d893
+}
+
+.cart-summary .total {
+    font-size: 15px;
+    color: white;
+    padding: 11px 0;
+    border-top: 1px solid #ffffff10;
+    margin-top: 13px
+}
+
+.checkout {
+    width: 100%;
+    margin-top: 12px
+}
+
+.modal {
+    position: fixed;
+    z-index: 32;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    opacity: 0;
+    transition: .2s
+}
+
+.modal.open {
+    opacity: 1
+}
+
+.modal-panel {
+    position: relative;
+    background: #111925;
+    border: 1px solid #ffffff18;
+    border-radius: 15px;
+    width: min(760px, 100%);
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: 0 30px 80px #0009;
+    padding: 32px;
+    transform: translateY(12px);
+    transition: .2s
+}
+
+.modal.open .modal-panel {
+    transform: none
+}
+
+.modal-panel>.close-btn {
+    position: absolute;
+    right: 16px;
+    top: 14px;
+    z-index: 1
+}
+
+.product-modal #productModalContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 34px
+}
+
+.modal-art .product-art {
+    height: 350px;
+    border-radius: 11px
+}
+
+.product-art.large span {
+    font-size: 120px
+}
+
+.modal-info>p {
+    color: var(--muted);
+    font-size: 13px
+}
+
+.specs {
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+    margin: 17px 0
+}
+
+.specs h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0
+}
+
+.specs p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px !important
+}
+
+.specs span {
+    font-size: 10px;
+    background: #ffffff08;
+    padding: 5px 7px;
+    border-radius: 5px;
+    color: #bfcad7
+}
+
+.modal-price {
+    display: block;
+    margin: 18px 0
+}
+
+.modal-buy {
+    display: flex;
+    gap: 12px;
+    align-items: end
+}
+
+.modal-buy label {
+    font-size: 10px;
+    color: var(--muted)
+}
+
+.modal-buy input {
+    display: block;
+    width: 62px;
+    background: #0a0e14;
+    border: 1px solid var(--line);
+    color: white;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 4px
+}
+
+.user-modal {
+    width: min(410px, 100%)
+}
+
+.auth-form {
+    display: grid;
+    gap: 13px;
+    margin-top: 20px
+}
+
+.auth-form label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #b4becb
+}
+
+.auth-form input {
+    width: 100%;
+    display: block;
+    margin-top: 5px;
+    border: 1px solid var(--line);
+    background: #0b1018;
+    color: white;
+    border-radius: 7px;
+    padding: 12px;
+    outline: none
+}
+
+.auth-form input:focus {
+    border-color: var(--blue)
+}
+
+.auth-switch {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 20px
+}
+
+.auth-switch button {
+    border: 0;
+    background: transparent;
+    color: #7aa7ff;
+    font-weight: bold
+}
+
+.full {
+    width: 100%;
+    margin-top: 15px
+}
+
+.danger {
+    border-color: #ef444466;
+    color: #ff9aa9
+}
+
+.account-email {
+    margin: 18px 0;
+    background: #ffffff07;
+    padding: 12px;
+    border-radius: 7px;
+    color: #b4becc;
+    font-size: 12px
+}
+
+.favorites-modal {
+    width: min(560px, 100%)
+}
+
+.favorite-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-top: 1px solid #ffffff0b;
+    padding: 11px 0
+}
+
+.favorite-row .product-art {
+    width: 65px;
+    height: 58px;
+    border-radius: 7px
+}
+
+.favorite-row .product-art span {
+    font-size: 25px
+}
+
+.favorite-row h3 {
+    font-size: 13px;
+    margin: 0
+}
+
+.favorite-row strong {
+    font-size: 12px
+}
+
+.favorite-row .icon-btn {
+    margin-left: auto;
+    color: #8ab6ff
+}
+
+.toast-container {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 40;
+    display: grid;
+    gap: 8px
+}
+
+.toast {
+    background: #192231;
+    border: 1px solid #35455b;
+    padding: 13px 17px;
+    border-radius: 8px;
+    box-shadow: 0 12px 35px #0008;
+    font-size: 12px;
+    animation: toast .3s both
+}
+
+.toast.success {
+    border-left: 3px solid var(--green)
+}
+
+.toast.error {
+    border-left: 3px solid var(--red, #ef4444)
+}
+
+@keyframes toast {
+    from {
+        opacity: 0;
+        transform: translateY(12px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+.modal[hidden] {
+    display: none
+}
