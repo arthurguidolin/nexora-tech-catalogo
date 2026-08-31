@@ -79,7 +79,7 @@ const keyboardImages = {
   k4: 'assets/images/keyboards/teclado4.png'
 };
 
-const products = [
+let products = [
   // Placas de vídeo
   [
     'g1',
@@ -366,3 +366,36 @@ const products = [
       null
   })
 );
+
+async function loadProductsFromApi() {
+  try {
+    const apiProducts = await Api.getProducts();
+    if (Array.isArray(apiProducts) && apiProducts.length > 0) {
+      products = apiProducts.map((p) => ({
+        id: p.id || p.Id,
+        name: p.name || p.Name,
+        category: p.category || p.Category,
+        price: p.price ?? p.Price,
+        oldPrice: p.oldPrice ?? p.OldPrice,
+        discount:
+          p.discount ??
+          p.Discount ??
+          (p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0),
+        rating: p.rating ?? p.Rating,
+        description: p.description || p.Description,
+        specs: p.specs || p.Specs,
+        image: p.image || p.Image
+      }));
+      console.log(
+        '[Products] Produtos carregados via Web API (PostgreSQL):',
+        products.length
+      );
+    }
+  } catch (err) {
+    console.warn(
+      '[Products] Usando catálogo de produtos local:',
+      err.message
+    );
+  }
+  return products;
+}

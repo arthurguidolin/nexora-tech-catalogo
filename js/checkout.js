@@ -44,7 +44,7 @@ const Checkout = (() => {
     localStorage.setItem(ordersKey, JSON.stringify(orders));
   };
 
-  const finalize = ({ address, paymentMethod }) => {
+  const finalize = async ({ address, paymentMethod }) => {
     const user = User.current();
 
     if (!user) {
@@ -54,23 +54,63 @@ const Checkout = (() => {
     const subtotal = Cart.subtotal();
     const discount = Cart.discount();
     const total = Math.max(subtotal - discount, 0);
+    const detailedItems = Cart.detailed();
+
+    const formattedAddress =
+      typeof address === 'string'
+        ? address
+        : `${address.rua}, ${address.numero} - ${address.bairro}, ${address.cidade} - CEP: ${address.cep}`;
+
+    const orderPayload = {
+      userEmail: user.email,
+      subtotal,
+      discount,
+      total,
+      address: formattedAddress,
+      paymentMethod,
+      items: detailedItems.map((item) => ({
+        productId: String(item.id),
+        productName: item.name || 'Produto',
+        price: item.price || 0,
+        quantity: item.qty || 1
+      }))
+    };
+
+    let createdOrder = null;
+
+    try {
+      createdOrder = await Api.createOrder(orderPayload);
+      console.log(
+        '[Checkout] Pedido salvo via Web API no PostgreSQL:',
+        createdOrder
+      );
+    } catch (err) {
+      console.warn(
+        '[Checkout] Falha ao persistir pedido via API, salvando apenas localmente:',
+        err.message
+      );
+    }
 
     const order = {
-      number: generateOrderNumber(),
+      number: createdOrder
+        ? createdOrder.orderNumber || createdOrder.OrderNumber
+        : generateOrderNumber(),
       email: user.email,
-      items: Cart.detailed(),
+      items: detailedItems,
       subtotal,
       discount,
       total,
       address,
       paymentMethod,
-      createdAt: new Date().toISOString()
+      createdAt: createdOrder
+        ? createdOrder.createdAt || createdOrder.CreatedAt
+        : new Date().toISOString()
     };
 
     saveAddress(address);
     saveOrder(order);
     sendEmail(user.email, order);
-    Cart.clear();
+    await Cart.clear();
 
     return order;
   };
