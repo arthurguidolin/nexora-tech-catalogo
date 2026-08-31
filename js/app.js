@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     products[9],
     products[19]
   ]
+    .filter(Boolean)
     .map(UI.productCard)
     .join('');
 

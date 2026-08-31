@@ -7,31 +7,45 @@ const UI = (() => {
   };
 
   const cat = (id) => {
-    return categories.find((category) => category.id === id);
+    return (
+      categories.find((category) => category.id === id) || {
+        id: id || '',
+        name: id ? id.charAt(0).toUpperCase() + id.slice(1) : 'Geral',
+        icon: '✦',
+        description: ''
+      }
+    );
   };
 
   const art = (product, large = false) => {
+    if (!product) return '';
+    const categoryObj = cat(product.category);
     return `
-      <div class="product-art ${product.category} ${
+      <div class="product-art ${product.category || ''} ${
         large ? 'large' : ''
       }">
-        ${product.image
-          ? `<img src="${product.image}" alt="${product.name}" loading="lazy">`
-          : `<span>${cat(product.category).icon}</span><i></i><b>${product.category}</b>`}
+        ${
+          product.image
+            ? `<img src="${product.image}" alt="${product.name || ''}" loading="lazy">`
+            : `<span>${categoryObj.icon || '✦'}</span><i></i><b>${product.category || ''}</b>`
+        }
       </div>
     `;
   };
 
   const stars = (rating) => {
+    const numRating = typeof rating === 'number' ? rating : 5.0;
     return `
       <span class="stars">
         ★ ★ ★ ★ ★
-        <i>${rating.toFixed(1)}</i>
+        <i>${numRating.toFixed(1)}</i>
       </span>
     `;
   };
 
   function productCard(product) {
+    if (!product) return '';
+    const categoryObj = cat(product.category);
     return `
       <article class="product-card" data-product="${product.id}">
         ${art(product)}
@@ -39,7 +53,7 @@ const UI = (() => {
         <div class="card-body">
           <div class="card-top">
             <span class="badge">
-              ${cat(product.category).name}
+              ${categoryObj.name}
             </span>
 
             <button
@@ -47,7 +61,7 @@ const UI = (() => {
                 Favorites.has(product.id) ? 'active' : ''
               }"
               data-favorite="${product.id}"
-              aria-label="Favoritar ${product.name}"
+              aria-label="Favoritar ${product.name || ''}"
             >
               ♥
             </button>
@@ -405,6 +419,10 @@ const UI = (() => {
 
   function openProduct(id) {
     const product = products.find((item) => item.id === id);
+    if (!product) return;
+
+    const categoryObj = cat(product.category);
+    const specsList = product.specs ? product.specs.split(' • ') : [];
 
     document.querySelector('#productModalContent').innerHTML = `
       <div class="modal-art">
@@ -413,27 +431,29 @@ const UI = (() => {
 
       <div class="modal-info">
         <span class="badge">
-          ${cat(product.category).name}
+          ${categoryObj.name}
         </span>
 
-        <h2>${product.name}</h2>
+        <h2>${product.name || ''}</h2>
         ${stars(product.rating)}
 
-        <p>${product.description}</p>
+        <p>${product.description || ''}</p>
 
-        <div class="specs">
-          <h4>Especificações</h4>
-
-          <p>
-            ${product.specs
-              .split(' • ')
-              .map((spec) => `<span>✓ ${spec}</span>`)
-              .join('')}
-          </p>
-        </div>
+        ${
+          specsList.length
+            ? `
+              <div class="specs">
+                <h4>Especificações</h4>
+                <p>
+                  ${specsList.map((spec) => `<span>✓ ${spec}</span>`).join('')}
+                </p>
+              </div>
+            `
+            : ''
+        }
 
         <strong class="modal-price">
-          ${money(product.price)}
+          ${money(product.price || 0)}
         </strong>
 
         <div class="modal-buy">
