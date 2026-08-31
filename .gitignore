@@ -1,14 +1,54 @@
-# Pastas de build e binários do .NET
-**/[Bb]in/
-**/[Oo]bj/
+# ==========================================
+# Nexora Tech - Git Ignore Rules
+# ==========================================
 
-# Arquivos de usuário e IDEs
+# --- .NET Build & Binaries ---
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Oo]ut/
+[Pp]ublish/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# --- IDEs & Editors ---
 .vs/
 .vscode/
-*.user
-*.suo
 .idea/
+*.user
+*.userossc
+*.suo
+*.userprefs
+*.sln.docstates
 
-# Sistema operacional
+# --- Antigravity & AI Tools Cache ---
+.gemini/
+.agents/
+
+# --- Environment & Credentials ---
+.env
+*.env
+*.env.local
+*.env.development
+*.env.production
+appsettings.Development.json
+appsettings.Local.json
+
+# --- Operating System & Temporary Files ---
 .DS_Store
 Thumbs.db
+desktop.ini
+*.tmp
+*.log
+*.bak
+*.swp
+
+# --- Node & Package Managers ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
