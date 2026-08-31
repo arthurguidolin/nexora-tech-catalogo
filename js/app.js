@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const $ = (selector) => {
     return document.querySelector(selector);
   };
@@ -13,6 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const animateRenderedContent = () => {
     animateCollection('#categoryGrid > *, #featuredGrid > *, #catalogGrid > *');
   };
+
+  if (typeof loadProductsFromApi === 'function') {
+    await loadProductsFromApi();
+  }
+
+  if (typeof Cart !== 'undefined' && Cart.syncWithApi) {
+    await Cart.syncWithApi();
+  }
 
   $('#categoryGrid').innerHTML = categories
     .map(
@@ -259,17 +267,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      const order = Checkout.finalize({
-        address,
-        paymentMethod
-      });
+      button.disabled = true;
+      (async () => {
+        try {
+          const order = await Checkout.finalize({
+            address,
+            paymentMethod
+          });
 
-      UI.close('checkoutModal');
-      UI.close('cartDrawer');
-      UI.renderCart();
-      UI.renderOrderSuccess(order);
-      UI.open('orderConfirmedModal');
-      UI.toast('Compra confirmada com sucesso!', 'success');
+          UI.close('checkoutModal');
+          UI.close('cartDrawer');
+          UI.renderCart();
+          UI.renderOrderSuccess(order);
+          UI.open('orderConfirmedModal');
+          UI.toast('Compra confirmada com sucesso!', 'success');
+        } catch (err) {
+          UI.toast(err.message || 'Erro ao finalizar compra.', 'error');
+        } finally {
+          button.disabled = false;
+        }
+      })();
     }
 
     if (button.matches('#cartButton')) {
@@ -331,12 +348,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.addEventListener('submit', (event) => {
+  document.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     try {
       if (event.target.id === 'loginForm') {
-        User.login(
+        await User.login(
           event.target.email.value,
           event.target.password.value
         );
@@ -354,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
           new FormData(event.target)
         );
 
-        User.register(formData);
+        await User.register(formData);
 
         UI.renderUser();
 
